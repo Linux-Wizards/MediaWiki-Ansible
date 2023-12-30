@@ -1,0 +1,50 @@
+- name: Install MariaDB packages
+  package:
+    name: "{{ database_packages }}"
+    state: present
+- name: Start and enable database service
+  service:
+    name: "{{ database_service }}"
+    state: started
+    enabled: true
+
+# Secure MariaDB installation
+- name: Update MariaDB root password
+  block:
+    - name: Update MariaDB root password
+      mysql_user:
+        name: root
+        host: "{{ item }}"
+        password: "{{ database_root_password }}"
+        login_unix_socket: "{{ database_socket }}"
+        column_case_sensitive: false
+      loop:
+        - 127.0.0.1
+        - ::1
+        - localhost
+  rescue:
+    - name: Update MariaDB root password
+      mysql_user:
+        name: root
+        host: "{{ item }}"
+        password: "{{ database_root_password }}"
+        login_user: root
+        login_password: "{{ database_previous_root_password }}"
+        column_case_sensitive: false
+      loop:
+        - 127.0.0.1
+        - ::1
+        - localhost
+        
+- name: Delete anonymous MySQL user
+  mysql_user:
+    name: ""
+    host: "{{ item }}"
+    state: absent
+    login_user: root
+    login_password: "{{ database_root_password }}"
+    column_case_sensitive: false
+  loop:
+    - localhost
+    - "{{ ansible_nodename }}"
+

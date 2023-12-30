@@ -1,0 +1,9 @@
+---
+- name: Install and configure database
+  hosts: db
+  tasks:
+    - name: Include variables
+      include_vars: vars/database-vars.yml
+    - name: Include tasks
+      include_tasks: tasks/database-tasks.yml
+...
