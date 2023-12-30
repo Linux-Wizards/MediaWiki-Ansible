@@ -1,10 +1,4 @@
-# Set to intended root password
 database_root_password: password
-# Set to previous root password (if changing)
-# Ignore if root password hasn't been set yet
-database_previous_root_password: password
-
-database_socket: /var/lib/mysql/mysql.sock
 database_packages:
   - mariadb
   - mariadb-server

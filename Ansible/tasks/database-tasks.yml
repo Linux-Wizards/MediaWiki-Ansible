@@ -7,44 +7,19 @@
     name: "{{ database_service }}"
     state: started
     enabled: true
-
-# Secure MariaDB installation
-- name: Update MariaDB root password
-  block:
-    - name: Update MariaDB root password
-      mysql_user:
-        name: root
-        host: "{{ item }}"
-        password: "{{ database_root_password }}"
-        login_unix_socket: "{{ database_socket }}"
-        column_case_sensitive: false
-      loop:
-        - 127.0.0.1
-        - ::1
-        - localhost
-  rescue:
-    - name: Update MariaDB root password
-      mysql_user:
-        name: root
-        host: "{{ item }}"
-        password: "{{ database_root_password }}"
-        login_user: root
-        login_password: "{{ database_previous_root_password }}"
-        column_case_sensitive: false
-      loop:
-        - 127.0.0.1
-        - ::1
-        - localhost
-        
-- name: Delete anonymous MySQL user
-  mysql_user:
-    name: ""
-    host: "{{ item }}"
-    state: absent
-    login_user: root
-    login_password: "{{ database_root_password }}"
-    column_case_sensitive: false
-  loop:
-    - localhost
-    - "{{ ansible_nodename }}"
-
+- name: Secure MariaDB installation
+  expect:
+    command: mariadb-secure-installation
+    responses:
+      'Enter current password for root': ''
+      'Switch to unix_socket authentication': 'n'
+      'Change the root password?': 'y'
+      'New password:': '{{ database_root_password }}'
+      'Re-enter new password:': '{{ database_root_password }}'
+      'Remove anonymous users': 'y'
+      'Disallow root login remotely': 'y'
+      'Remove test database and access to it': 'y'
+      'Reload privilege tables now': 'y'
+    timeout: 5
+  register: secure_mariadb
+  failed_when: "'... Failed!' in secure_mariadb.stdout_lines"
