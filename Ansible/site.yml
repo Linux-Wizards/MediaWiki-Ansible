@@ -6,4 +6,13 @@
   tasks:
     - name: Include tasks
       include_tasks: tasks/database-tasks.yml
+
+
+- name: Configure the application server
+  hosts: app
+  vars_files:
+    - vars/app-vars.yml
+  tasks:
+    - name: Include tasks
+      include_tasks: tasks/app-tasks.yml
 ...

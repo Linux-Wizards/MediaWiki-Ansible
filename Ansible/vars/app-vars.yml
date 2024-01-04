@@ -1,0 +1,5 @@
+package_link: https://releases.wikimedia.org/mediawiki/1.41/mediawiki-1.41.0.tar.gz
+app_packages:
+  - httpd
+  - php
+  - php-intl
