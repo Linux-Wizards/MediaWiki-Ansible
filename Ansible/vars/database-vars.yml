@@ -5,3 +5,9 @@ database_packages:
   - mariadb-backup
   - python3-PyMySQL
 database_service: mariadb
+
+database_user: mediawiki
+database_password: password
+database_name: wikidb
+
+app_server: ansible2.example.com

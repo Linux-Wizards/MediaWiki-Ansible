@@ -23,3 +23,25 @@
     timeout: 5
   register: secure_mariadb
   failed_when: "'... Failed!' in secure_mariadb.stdout_lines"
+- name: Create database for MediaWiki
+  mysql_db:
+    name: "{{ database_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ database_root_password }}"
+- name: Create database user for MediaWiki
+  mysql_user:
+    name: "{{ database_user }}"
+    state: present
+    password: "{{ database_password }}"
+    host: "{{ app_server }}"
+    priv: "{{ database_name }}.*: ALL,GRANT"
+    login_user: root
+    login_password: "{{ database_root_password }}"
+    column_case_sensitive: false
+- name: Open firewall for MariaDB
+  firewalld:
+    service: mysql
+    state: enabled
+    permanent: true
+    immediate: true
