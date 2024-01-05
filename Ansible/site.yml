@@ -5,7 +5,7 @@
     - vars/database-vars.yml
   tasks:
     - name: Include tasks
-      include_tasks: tasks/database-tasks.yml
+      import_tasks: tasks/database-tasks.yml
 
 
 - name: Configure the application server
@@ -14,7 +14,8 @@
     - vars/app-vars.yml
   tasks:
     - name: Include tasks
-      include_tasks: tasks/app-tasks.yml
+      import_tasks: tasks/app-tasks.yml
+
   handlers:
     - name: Restart httpd
       service:
