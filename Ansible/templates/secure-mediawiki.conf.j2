@@ -1,0 +1,15 @@
+<Directory "{{ install_dir }}/images">
+   # Ignore .htaccess files
+   AllowOverride None
+   
+   # Serve HTML as plaintext, don't execute SHTML
+   AddType text/plain .html .htm .shtml .phtml
+   
+   # Don't run arbitrary PHP code.
+   php_admin_flag engine off
+
+   # Tell browsers to not sniff files
+   Header set X-Content-Type-Options nosniff
+   
+   # If you've other scripting languages, disable them too.
+</Directory>

@@ -16,6 +16,12 @@
     state: started
     enabled: true
 
+- name: Secure httpd for MediaWiki
+  template:
+    src: secure-mediawiki.conf.j2
+    dest: /etc/httpd/conf.d/secure-mediawiki.conf
+  notify: Restart httpd
+
 - name: Download MediaWiki package
   get_url:
     url: "{{ package_link }}"
@@ -24,7 +30,7 @@
 - name: Unpack MediaWiki package
   unarchive:
     src: /tmp/mediawiki.tar.gz
-    dest: /var/www/html
+    dest: "{{ install_dir }}"
     remote_src: yes
     extra_opts: --strip-components=1
 

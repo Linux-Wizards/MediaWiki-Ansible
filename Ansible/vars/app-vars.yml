@@ -1,4 +1,5 @@
 package_link: https://releases.wikimedia.org/mediawiki/1.41/mediawiki-1.41.0.tar.gz
+install_dir: /var/www/html
 app_packages:
   - httpd
   - php
