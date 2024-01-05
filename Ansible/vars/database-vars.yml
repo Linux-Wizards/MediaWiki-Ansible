@@ -10,4 +10,6 @@ database_user: mediawiki
 database_password: password
 database_name: wikidb
 
-app_server: ansible2.example.com
+app_servers:
+  - ansible2
+  - ansible2.example.com

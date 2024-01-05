@@ -34,11 +34,12 @@
     name: "{{ database_user }}"
     state: present
     password: "{{ database_password }}"
-    host: "{{ app_server }}"
+    host: "{{ item }}"
     priv: "{{ database_name }}.*: ALL,GRANT"
     login_user: root
     login_password: "{{ database_root_password }}"
     column_case_sensitive: false
+  loop: "{{ app_servers }}"
 - name: Open firewall for MariaDB
   firewalld:
     service: mysql

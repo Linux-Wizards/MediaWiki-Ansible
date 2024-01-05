@@ -10,6 +10,15 @@
     permanent: true
     immediate: true
 
+- name: Allow httpd to connect to DB (SELinux)
+  seboolean:
+    name: "{{ item }}"
+    state: true
+    persistent: true
+  loop:
+    - httpd_can_network_connect
+    - httpd_can_network_connect_db
+
 - name: Enable and start httpd
   service:
     name: httpd

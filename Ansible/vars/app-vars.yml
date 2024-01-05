@@ -6,4 +6,5 @@ app_packages:
   - php-intl
   - php-pecl-apcu
   - php-gd
+  - php-mysqlnd
   - git
