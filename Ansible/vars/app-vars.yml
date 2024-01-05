@@ -3,3 +3,4 @@ app_packages:
   - httpd
   - php
   - php-intl
+  - php-pecl-apcu
