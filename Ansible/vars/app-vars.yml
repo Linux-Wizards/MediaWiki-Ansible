@@ -4,3 +4,5 @@ app_packages:
   - php
   - php-intl
   - php-pecl-apcu
+  - php-gd
+  - git
