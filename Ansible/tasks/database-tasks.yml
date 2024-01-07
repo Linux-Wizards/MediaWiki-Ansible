@@ -2,11 +2,13 @@
   package:
     name: "{{ database_packages }}"
     state: present
+
 - name: Start and enable database service
   service:
     name: "{{ database_service }}"
     state: started
     enabled: true
+
 - name: Secure MariaDB installation
   expect:
     command: mariadb-secure-installation
@@ -23,12 +25,14 @@
     timeout: 5
   register: secure_mariadb
   failed_when: "'... Failed!' in secure_mariadb.stdout_lines"
+
 - name: Create database for MediaWiki
   mysql_db:
     name: "{{ database_name }}"
     state: present
     login_user: root
     login_password: "{{ database_root_password }}"
+
 - name: Create database user for MediaWiki
   mysql_user:
     name: "{{ database_user }}"
@@ -40,9 +44,23 @@
     login_password: "{{ database_root_password }}"
     column_case_sensitive: false
   loop: "{{ app_servers }}"
+
 - name: Open firewall for MariaDB
   firewalld:
     service: mysql
     state: enabled
     permanent: true
     immediate: true
+
+- name: Copy database dump for restoration
+  copy:
+    src: files/dump.sql
+    dest: /tmp/mediawiki-dump.sql
+
+- name: Restore database
+  mysql_db:
+    name: "{{ database_name }}"
+    state: import
+    target: /tmp/mediawiki-dump.sql
+    login_user: root
+    login_password: "{{ database_root_password }}"
