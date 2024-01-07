@@ -42,8 +42,17 @@
     dest: "{{ install_dir }}"
     remote_src: yes
     extra_opts: --strip-components=1
+    owner: root
+    group: root
 
 - name: Remove MediaWiki package
   file:
     path: /tmp/mediawiki.tar.gz
     state: absent
+
+- name: Install LocalSettings.php
+  template:
+    src: LocalSettings.php.j2
+    dest: "{{ install_dir }}/LocalSettings.php"
+    owner: root
+    group: root

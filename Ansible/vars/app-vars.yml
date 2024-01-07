@@ -8,3 +8,10 @@ app_packages:
   - php-gd
   - php-mysqlnd
   - git
+# MediaWiki configuration
+wgSitename: "WizardsWiki"
+wgServer: "http://ansible2.example.com:80"
+wgDBserver: "ansible1.example.com"
+wgLanguageCode: "en"
+wgLocaltimezone: "UTC"
+wgDefaultSkin: "MinervaNeue"
