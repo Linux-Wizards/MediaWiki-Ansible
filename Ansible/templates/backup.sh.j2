@@ -1,0 +1,43 @@
+#!/bin/bash
+
+info () { echo -e "\e[32m[INFO]\e[0m ${1}" ; }
+warn () { echo -e "\e[33m[WARN]\e[0m ${1}" ; }
+error () { echo -e "\e[31m[ERROR]\e[0m ${1}" ; }
+
+
+helper()
+{
+cat <<EOF
+Usage: $0 [option]
+
+-s|--server	Server backup
+-d|--database	Database backup
+-h|--help	Show this help
+
+EOF
+}
+
+comm=$1
+DBdir="{{ db_backup_location }}"
+incremental_file="{{ app_backup_location }}/incremental_file"
+SRVdir="{{ app_backup_location }}"
+backupDate=$(date +"%Y%m%d-%H%M%S")
+
+[[ $# -gt 1 ]] && { warn "** Used too many args. Use only one. **"; exit 0; }
+
+case $comm in
+	"-s"|"--server")
+		[[ -d $SRVdir ]] || mkdir -p $SRVdir
+		find $SRVdir/* -mtime +7 -delete	# delete files older than week
+		tar -g "$incremental_file" -cvzf "$SRVdir/incremental_backup_${backupDate}.tar.gz" "{{ install_dir }}"
+		;;
+	"-db"|"--database")
+		[[ -d $DBdir ]] || mkdir -p $DBdir
+		find $DBdir/* -mtime +7 -delete		# delete files older than week
+		mysqldump -u root -p{{ database_root_password }} {{ database_name }} > "${DBdir}/mysqldump_${backupDate}.dump"
+		;;
+	"-h"|"--help") helper ;;
+	 *) info "** Bad input, use -h|--help **" ;;
+esac
+
+exit 0

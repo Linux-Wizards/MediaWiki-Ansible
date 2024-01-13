@@ -17,6 +17,16 @@
     - name: Include tasks
       import_tasks: tasks/app-tasks.yml
 
+- name: Install backup script
+  hosts: all
+  vars_files:
+    - vars/app-vars.yml
+    - vars/database-vars.yml
+    - vars/backup-vars.yml
+  tasks:
+    - name: Include tasks
+      import_tasks: tasks/backup-tasks.yml
+
   handlers:
     - name: Restart httpd
       service:

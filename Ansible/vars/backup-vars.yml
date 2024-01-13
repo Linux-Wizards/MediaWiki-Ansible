@@ -1,0 +1,3 @@
+backup_script_location: /Backup
+db_backup_location: /Backup/database
+app_backup_location: /Backup/app
