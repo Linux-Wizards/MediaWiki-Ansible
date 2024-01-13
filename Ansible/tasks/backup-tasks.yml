@@ -8,3 +8,11 @@
     src: backup.sh.j2
     dest: "{{ backup_script_location }}/backup.sh"
     mode: '0774'
+
+- name: Install cron job for backup script
+  cron:
+    name: 'MediaWiki backup job'
+    hour: "3"
+    minute: "0"
+    state: present
+    job: "{{ backup_script_location }}/backup.sh {{ '--database' if inventory_hostname in groups['db'] else '--server' }}"
